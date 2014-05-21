@@ -248,7 +248,7 @@ import sys
 if __name__ == "__main__":
     lex = Lexer()
     lex.lex_file(sys.argv[1])
-    for t in lex.tokens:
-        print(t)
+    while lex.not_token_end():
+        print(lex.next_token())
 
 #-------------------------------------------------------------------------------
