@@ -107,6 +107,8 @@ class Lexer(object):
 
     def next_token(self):
         self.index += 1
+        if self.not_token_end():
+            return self.current_token
 
     def not_token_end(self):
         return self.index < len(self.tokens)
@@ -122,7 +124,7 @@ class Lexer(object):
             self.stream = f.read()
             self.lex()
 
-    def next_token(self):
+    def lex_next_token(self):
         if not self.skip_space():
             return
         if self.is_uppercase():
@@ -152,7 +154,7 @@ class Lexer(object):
     
     def lex(self):
         while self.not_end():
-            self.tokens.append(self.next_token())
+            self.tokens.append(self.lex_next_token())
         self.tokens = self.tokens[:-1]
         return self.tokens
 
@@ -162,7 +164,7 @@ class Lexer(object):
         return self.not_end()
 
     def is_special(self):
-        return self.current in "+\-*/\\^~:.?\s#$&"
+        return self.current in "+-*/\\^~:.? #$&"
 
     def is_digit(self):
         return self.current.isdigit()
@@ -182,7 +184,7 @@ class Lexer(object):
     def string(self):
         self.next()
         result = ''
-        while self.is_characeter() and self.current != "'":
+        while self.is_character() and self.current != "'":
             result += self.current
             self.next()
         return result
